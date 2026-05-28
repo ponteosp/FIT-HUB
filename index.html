@@ -366,19 +366,16 @@
     ──────────────────────────────────────────── */
     .spazio {
       background: var(--surface-1);
-      padding-top: var(--section-py);
-      padding-bottom: 48px;
-      /* no side padding — slider goes full width so calc(100vw…) is exact */
+      padding: var(--section-py) 6% 48px;
     }
-    /* title still needs side margin */
-    .spazio .section-title { padding: 0 8%; margin-bottom: 40px; }
+    .spazio .section-title { margin-bottom: 40px; }
 
     .slider {
       position: relative;
       width: 100%;
-      height: calc(100vw * 1722 / 2600);  /* exact image ratio 2600×1722 */
+      height: calc(88vw * 1722 / 2600);  /* 88vw = 100vw - 6% padding each side */
       overflow: hidden;
-      /* no aspect-ratio, no max-height — height is fully explicit */
+      border-radius: var(--r-card);
     }
     .slider__track {
       display: flex;
