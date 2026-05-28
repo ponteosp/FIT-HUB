@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIT HUB — Centro di Allenamento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --bg:           #000;
+      --white:        #fff;
+      --surface-1:    #111;
+      --surface-2:    #1a1a1a;
+      --border:       rgba(255,255,255,0.12);
+      --font:         'Outfit', sans-serif;
+      --nav-h:        148px;
+      --r-card:       20px;
+      --r-photo:      14px;
+      --section-py:   110px;   /* vertical rhythm between sections */
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--white);
+    }
+    body { overflow-x: hidden; }
+    img  { display: block; }
+
+    /* ────────────────────────────────────────────
+       SHARED SECTION TITLE  (left-aligned, 1.5×)
+    ──────────────────────────────────────────── */
+    .section-title {
+      text-align: left;
+      font-size: clamp(1.85rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 52px;
+    }
+
+    /* ────────────────────────────────────────────
+       NAVBAR
+    ──────────────────────────────────────────── */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .navbar__logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .navbar__logo img {
+      height: 120px;
+      width: auto;
+    }
+
+    .navbar__links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .navbar__links a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.73rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.78;
+      transition: opacity 0.2s;
+    }
+    .navbar__links a:hover { opacity: 1; }
+
+    .navbar__hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 6px;
+    }
+    .navbar__hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    /* ────────────────────────────────────────────
+       HERO
+    ──────────────────────────────────────────── */
+    .hero {
+      width: 100%;
+      height: 100vh;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;  /* anchor full-section pseudo-elements */
+    }
+
+    /* ── Radial glow that breathes from the logo outward ── */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 58% 64% at 50% 50%,
+        rgba(255,255,255,0.045) 0%,
+        transparent 70%
+      );
+      animation: heroPulse 5s ease-in-out 2.2s infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes heroPulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.88); }
+      50%       { opacity: 1;   transform: scale(1.18); }
+    }
+
+    /* ── Full-section diagonal sweep — fills the entire hero ── */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: -30% -5%;
+      background: linear-gradient(
+        108deg,
+        transparent 34%,
+        rgba(255,255,255,0.03) 50%,
+        transparent 66%
+      );
+      transform: translateX(-130%);
+      animation: heroScanFull 11s ease-in-out 4.5s infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes heroScanFull {
+      0%   { transform: translateX(-130%); }
+      26%  { transform: translateX(130%);  }
+      100% { transform: translateX(130%);  }
+    }
+
+    /* wrapper: sits above radial glow, clips the tighter logo shimmer */
+    .hero__logo-wrap {
+      position: relative;
+      z-index: 1;
+      width: clamp(460px, 82vw, 1100px);
+      overflow: hidden;
+    }
+    /* tighter diagonal shimmer visible only on the logo */
+    .hero__logo-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -30% -10%;
+      background: linear-gradient(
+        105deg,
+        transparent 35%,
+        rgba(255,255,255,0.11) 50%,
+        transparent 65%
+      );
+      transform: translateX(-160%);
+      animation: heroScan 7s ease-in-out 2.8s infinite;
+      pointer-events: none;
+    }
+    @keyframes heroScan {
+      0%   { transform: translateX(-160%); }
+      34%  { transform: translateX(160%); }
+      100% { transform: translateX(160%); }
+    }
+
+    .hero__logo {
+      width: 100%;
+      display: block;
+    }
+
+    /* ────────────────────────────────────────────
+       SECTION 1 — CHI SIAMO
+    ──────────────────────────────────────────── */
+    .intro {
+      display: grid;
+      grid-template-columns: 55% 45%;
+      gap: 44px;
+      align-items: center;
+      padding: var(--section-py) 8%;
+      /* more bottom gap before Section 2 */
+      padding-bottom: 200px;
+      background: var(--bg);
+    }
+
+    .intro__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .intro__icon img {
+      /* 2.5× the old value – fills the 50% column nicely */
+      width: clamp(200px, 34vw, 460px);
+      height: auto;
+    }
+
+    .intro__text p {
+      font-weight: 300;
+      line-height: 1.85;
+      font-size: clamp(1rem, 1.55vw, 1.18rem);
+      color: var(--white);
+    }
+    .intro__text p strong { font-weight: 700; }
+    .intro__text p + p    { margin-top: 1.5em; }
+
+    /* ────────────────────────────────────────────
+       SECTION 2 — COSA OFFRIAMO
+    ──────────────────────────────────────────── */
+    .offriamo {
+      padding: var(--section-py) 10% 180px;   /* extra bottom gap before Section 3 */
+      background: var(--surface-1);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);   /* 2×2 — more vertical development */
+      gap: 14px;
+    }
+
+    .card {
+      position: relative;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      cursor: pointer;
+      border-radius: var(--r-card);
+    }
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease, filter 0.35s ease;
+    }
+    .card:hover:not(.active) img { transform: scale(1.05); }
+
+    .card__overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      transition: opacity 0.35s ease, background 0.35s ease;
+    }
+    .card:hover:not(.active) .card__overlay { opacity: 0; }
+
+    /* ── CARD ACTIVE (click reveal) ── */
+    .card.active img {
+      transform: none !important;
+      filter: brightness(0.5) saturate(0.2);
+    }
+    .card.active .card__overlay {
+      opacity: 1 !important;
+      background: rgba(0,0,0,0.50) !important;   /* less opaque */
+    }
+
+    .card__label {
+      position: absolute;
+      bottom: 22px;
+      left: 22px;
+      z-index: 4;
+      color: #fff;
+      font-weight: 300;
+      font-size: clamp(2rem, 3.2vw, 3.4rem);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      line-height: 1.15;
+      text-shadow: 0 3px 22px rgba(0,0,0,0.98);
+      /* only bottom transitions; font stays identical */
+      transition: bottom 0.38s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    /* label shifts up to create space — all font properties identical */
+    .card.active .card__label {
+      bottom: 265px;   /* accounts for doubled description height */
+    }
+
+    /* description anchored at bottom-left, right margin forces wrapping */
+    .card__desc {
+      position: absolute;
+      bottom: 22px;
+      left: 22px;
+      right: 22px;
+      z-index: 3;
+      color: rgba(255,255,255,0.82);
+      font-size: clamp(1.64rem, 2.0vw, 1.84rem);   /* 2× previous */
+      font-weight: 100;   /* 1/3 of label weight 300 */
+      line-height: 1.72;
+      text-align: left;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.32s ease 0.15s, transform 0.32s ease 0.15s;
+      pointer-events: none;
+    }
+    .card.active .card__desc {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .card__desc p + p { margin-top: 0.85em; }
+
+    /* ────────────────────────────────────────────
+       SECTION 3 — TEAM
+    ──────────────────────────────────────────── */
+    .team {
+      padding: var(--section-py) 10%;   /* matches COSA OFFRIAMO left alignment */
+      background: var(--bg);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      /* constrain cards to the same narrowness as before, centered */
+      max-width: 74%;
+    }
+
+    .team-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 28px;
+      border-radius: var(--r-card);
+    }
+    .team-card__photo {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      object-position: top center;
+      margin-bottom: 22px;
+      border-radius: var(--r-photo);
+    }
+    .team-card p {
+      font-weight: 300;
+      line-height: 1.85;
+      font-size: clamp(1rem, 1.55vw, 1.18rem);
+      color: var(--white);
+    }
+    .team-card p + p { margin-top: 1.2em; }
+
+    /* ────────────────────────────────────────────
+       SECTION 4 — SLIDER
+    ──────────────────────────────────────────── */
+    .spazio {
+      background: var(--surface-1);
+      padding-top: var(--section-py);
+      padding-bottom: 48px;
+      /* no side padding — slider goes full width so calc(100vw…) is exact */
+    }
+    /* title still needs side margin */
+    .spazio .section-title { padding: 0 8%; margin-bottom: 40px; }
+
+    .slider {
+      position: relative;
+      width: 100%;
+      height: calc(100vw * 1722 / 2600);  /* exact image ratio 2600×1722 */
+      overflow: hidden;
+      /* no aspect-ratio, no max-height — height is fully explicit */
+    }
+    .slider__track {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      will-change: transform;
+      transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .slider__slide {
+      min-width: 100%;
+      width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+      background: #000;   /* black fill behind uncropped image */
+    }
+    .slider__slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;   /* full image visible, no cropping */
+      display: block;
+    }
+
+    .slider__btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(0,0,0,0.45);
+      border: none;
+      cursor: pointer;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .slider__btn:hover { background: rgba(0,0,0,0.78); }
+    .slider__btn--prev { left: 20px; }
+    .slider__btn--next { right: 20px; }
+    .slider__btn svg {
+      width: 20px; height: 20px;
+      fill: none; stroke: #fff;
+      stroke-width: 2.5;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .slider__dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 22px 0 48px;
+    }
+    .slider__dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      border: none; cursor: pointer; padding: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .slider__dot.active { background: #fff; transform: scale(1.3); }
+
+    /* ────────────────────────────────────────────
+       SECTION 5 — PREZZARIO
+    ──────────────────────────────────────────── */
+    .prezzario {
+      padding: var(--section-py) 10%;   /* matches COSA OFFRIAMO left alignment */
+      background: var(--bg);
+    }
+    .pricing-inner {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .pricing-block {
+      border: 1px solid var(--border);
+      border-radius: var(--r-card);
+      overflow: hidden;
+      background: var(--surface-1);
+    }
+    .pricing-block__header {
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+    }
+    .pricing-block__title {
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.42);
+    }
+
+    .price-table { display: grid; }
+    .price-table--3col { grid-template-columns: 1.3fr 1fr 1fr; }
+    .price-table--2col { grid-template-columns: 1.5fr 1fr; }
+
+    .pt-head {
+      padding: 12px 20px;
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+      background: rgba(255,255,255,0.02);
+    }
+    .pt-label {
+      padding: 18px 20px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.78);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+    }
+    .pt-value {
+      padding: 18px 20px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pt-value small {
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.42);
+      margin-left: 4px;
+    }
+
+    .pricing-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .pricing-note {
+      max-width: 780px;
+      margin-top: 28px;
+      text-align: center;
+      font-size: 0.76rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.28);
+      letter-spacing: 0.08em;
+    }
+    .pricing-note strong {
+      font-weight: 600;
+      letter-spacing: 0.16em;
+    }
+
+    /* ── ORARI SECTION ── */
+    .orari-section {
+      background: var(--bg);
+      padding: var(--section-py) 10%;
+    }
+
+    /* ── ORARI ── */
+    .orari-wrap {
+      margin: 96px auto 0;   /* more gap, centered */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .orari-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* pill — starts hidden, blocks slide in from sides, then scan sweeps */
+    .orari {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .orari.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+    /* horizontal scan line that runs indefinitely after entrance */
+    .orari.visible::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 10%,
+        rgba(255,255,255,0.1) 50%,
+        transparent 90%
+      );
+      transform: translateX(-200%);
+      animation: orariScan 5s ease-in-out 0.7s infinite;
+      pointer-events: none;
+    }
+    @keyframes orariScan {
+      0%   { transform: translateX(-200%); }
+      38%  { transform: translateX(200%); }
+      100% { transform: translateX(200%); }
+    }
+
+    /* each block starts off-screen and slides inward */
+    .orari__block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 26px 56px;
+      gap: 8px;
+      opacity: 0;
+      transform: translateX(-28px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .orari__block:nth-child(2) { transform: translateX(28px); }
+    .orari.visible .orari__block:nth-child(1) {
+      opacity: 1; transform: translateX(0); transition-delay: 0.18s;
+    }
+    .orari.visible .orari__block:nth-child(2) {
+      opacity: 1; transform: translateX(0); transition-delay: 0.32s;
+    }
+    .orari__block + .orari__block {
+      border-left: 1px solid rgba(255,255,255,0.15);
+    }
+    .orari__days {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+    .orari__time {
+      font-size: 2rem;
+      font-weight: 300;
+      color: #fff;
+      letter-spacing: 0.02em;
+    }
+
+    /* ────────────────────────────────────────────
+       FOOTER
+    ──────────────────────────────────────────── */
+    .footer {
+      background: #000;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding: 140px 8% 68px;
+      position: relative;
+    }
+
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 40px 56px;
+      align-items: start;
+    }
+
+    /* Col 1 — Logo */
+    .footer__logo img {
+      width: 190px;
+      height: auto;
+    }
+
+    /* Col 2 — Contacts */
+    .footer__contacts {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .footer__item {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      color: var(--white);
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.5;
+    }
+    .footer__item svg {
+      width: 18px; height: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .footer__item a {
+      color: var(--white);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: rgba(255,255,255,0.28);
+      transition: text-decoration-color 0.2s, opacity 0.2s;
+    }
+    .footer__item a:hover {
+      text-decoration-color: rgba(255,255,255,0.8);
+    }
+
+    /* Col 3 — Social icons (bottom-aligned in cell) */
+    .footer__social-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 100%;
+    }
+    .footer__social {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .footer__social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.22);
+      transition: border-color 0.2s, background 0.2s;
+      text-decoration: none;
+    }
+    .footer__social a:hover {
+      border-color: rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.06);
+    }
+    .footer__social svg {
+      width: 22px; height: 22px;
+    }
+
+    /* Back to top */
+    .footer__back-top {
+      position: absolute;
+      bottom: 52px;
+      right: 8%;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.32);
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .footer__back-top:hover {
+      border-color: #fff;
+      background: rgba(255,255,255,0.08);
+    }
+    .footer__back-top svg {
+      width: 16px; height: 16px;
+      fill: none; stroke: #fff;
+      stroke-width: 2.5;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ── wa.png icon sizing by context ── */
+    .icon-wa {
+      display: block;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .footer__item .icon-wa  { width: 18px; height: 18px; margin-top: 2px; }
+    .footer__social .icon-wa{ width: 22px; height: 22px; }
+    .whatsapp-fab .icon-wa  { width: 30px; height: 30px; }
+
+    /* ────────────────────────────────────────────
+       WHATSAPP FAB
+    ──────────────────────────────────────────── */
+    .whatsapp-fab {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      z-index: 200;
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: #25d366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 4px 22px rgba(37,211,102,0.38);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .whatsapp-fab:hover {
+      transform: scale(1.09);
+      box-shadow: 0 6px 30px rgba(37,211,102,0.55);
+    }
+    .whatsapp-fab svg { width: 28px; height: 28px; fill: #fff; }
+
+    /* ────────────────────────────────────────────
+       RESPONSIVE — 1024px
+    ──────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .team-grid { max-width: 90%; }
+    }
+
+    /* ────────────────────────────────────────────
+       RESPONSIVE — 768px
+    ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      :root { --nav-h: 84px; --section-py: 72px; }
+      .navbar__logo img { height: 60px; }
+
+      .navbar__links {
+        display: none;
+        position: fixed;
+        top: var(--nav-h);
+        left: 0; right: 0;
+        background: rgba(0,0,0,0.97);
+        flex-direction: column;
+        padding: 24px 6%;
+        gap: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        z-index: 99;
+      }
+      .navbar__links.open { display: flex; }
+      .navbar__hamburger  { display: flex; }
+
+      .intro {
+        grid-template-columns: 1fr;
+        padding: 72px 6% 100px;
+        gap: 36px;
+      }
+      .intro__icon img { width: clamp(120px, 50vw, 220px); }
+
+      .offriamo { padding-left: 5%; padding-right: 5%; padding-bottom: 100px; }
+
+      .cards-grid { grid-template-columns: repeat(2,1fr); gap: 10px; }
+      .card:not(.active) .card__overlay { opacity: 0 !important; transition: none !important; }
+      .card__label { font-size: clamp(1.2rem, 4vw, 1.8rem); }
+      .card.active .card__label { bottom: 220px; }
+      .card__desc { font-size: clamp(1.3rem, 4vw, 1.6rem); right: 16px; left: 16px; bottom: 16px; }
+
+      .team { padding-left: 5%; padding-right: 5%; }
+      .team-grid { grid-template-columns: 1fr; gap: 24px; }
+
+      .pricing-two-col { grid-template-columns: 1fr; }
+
+      .orari__block { padding: 20px 32px; transform: none !important; opacity: 1 !important; }
+      .orari__time  { font-size: 1.5rem; }
+      .orari { flex-direction: column; border-radius: var(--r-card); }
+      .orari__block + .orari__block { border-left: none; border-top: 1px solid rgba(255,255,255,0.15); }
+
+      .footer__grid { grid-template-columns: 1fr; gap: 32px; }
+      .footer__social-col { height: auto; }
+      .footer__back-top { position: static; margin-top: 28px; }
+
+      .whatsapp-fab { bottom: 20px; right: 20px; width: 48px; height: 48px; }
+      .whatsapp-fab svg { width: 24px; height: 24px; }
+    }
+
+    /* ────────────────────────────────────────────
+       RESPONSIVE — 480px
+    ──────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      .prezzario  { padding: 60px 4%; }
+      .orari__block { padding: 18px 24px; }
+      .orari__time  { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════════ -->
+<nav class="navbar" role="navigation" aria-label="Navigazione principale">
+
+  <a class="navbar__logo"
+     href="#"
+     onclick="window.location.reload(); return false;"
+     aria-label="FIT HUB — ricarica la pagina">
+    <img src="cuore B.png" alt="FIT HUB logo">
+  </a>
+
+  <button class="navbar__hamburger"
+          aria-label="Apri menu di navigazione"
+          aria-expanded="false"
+          id="hamburger">
+    <span></span><span></span><span></span>
+  </button>
+
+  <ul class="navbar__links" id="navLinks" role="list">
+    <li><a href="#chi-siamo">FIT HUB</a></li>
+    <li><a href="#cosa-offriamo">Cosa Offriamo</a></li>
+    <li><a href="#il-team">Team</a></li>
+    <li><a href="#il-nostro-spazio">Il Nostro Spazio</a></li>
+    <li><a href="#contatti">Contatti</a></li>
+  </ul>
+</nav>
+
+
+<!-- ══════════════════════════════════════════════
+     SECTION 0 — HERO
+══════════════════════════════════════════════ -->
+<section class="hero" aria-label="FIT HUB — benvenuto">
+  <div class="hero__logo-wrap">
+    <img class="hero__logo"
+         src="FH + scritta B.png"
+         alt="FIT HUB — Il tuo centro di allenamento">
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     SECTION 1 — CHI SIAMO
+══════════════════════════════════════════════ -->
+<section class="intro" id="chi-siamo">
+
+  <div class="intro__icon" aria-hidden="true">
+    <img src="FH + cuore B.png" alt="">
+  </div>
+
+  <div class="intro__text">
+    <p><strong>FIT HUB</strong> è un centro di allenamento nato dall'esperienza di Francesco Mazzavillani e Luca Ricci, laureati magistrali in Scienze Motorie.</p>
+    <p>Offriamo percorsi personalizzati in attività fisica adattata, riabilitazione e sviluppo della performance, con un approccio scientifico e attento alle esigenze. A disposizione una palestra completa, progettata per garantire qualità e attenzione in ogni sessione.</p>
+    <p><strong>FIT HUB</strong> è un ecosistema pensato per il tuo benessere a 360°. Grazie alla collaborazione di figure professionali in ambito fisioterapico, nutrizionale e psicologico, il milgioramento del tuo benessere psicofisico è al primo posto !</p>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     SECTION 2 — COSA OFFRIAMO
+══════════════════════════════════════════════ -->
+<section class="offriamo" id="cosa-offriamo" aria-labelledby="offriamo-title">
+  <h2 class="section-title" id="offriamo-title">COSA OFFRIAMO</h2>
+
+  <div class="cards-grid">
+
+    <article class="card" role="button" tabindex="0" aria-expanded="false">
+      <img src="Personal training.jpeg" alt="Personal training — allenamento su misura">
+      <div class="card__overlay" aria-hidden="true"></div>
+      <span class="card__label">Sala pesi e personal training</span>
+      <div class="card__desc">
+        <p>Allenamenti personalizzati in piccoli gruppi (max 5 persone) mirati a raggiungere tuo obiettivo.</p>
+        <p>Possibilità di sessioni di allenamento individuali.</p>
+      </div>
+    </article>
+
+    <article class="card" role="button" tabindex="0" aria-expanded="false">
+      <img src="Attività fisica adattata.jpeg" alt="Attività fisica adattata per ogni esigenza">
+      <div class="card__overlay" aria-hidden="true"></div>
+      <span class="card__label">Attività<br>fisica<br>adattata</span>
+      <div class="card__desc">
+        <p>Attività adattata alla condizione fisica e patologica.</p>
+        <p>Prevenzione dell'insorgenza di malattie come osteoporosi, sarcopenia, diabete e ipertensione.</p>
+      </div>
+    </article>
+
+    <article class="card" role="button" tabindex="0" aria-expanded="false">
+      <img src="Riabilitazione.jpeg" alt="Riabilitazione fisica e sportiva">
+      <div class="card__overlay" aria-hidden="true"></div>
+      <span class="card__label">Riabilitazione</span>
+      <div class="card__desc">
+        <p>Rieducazione funzionale post-infortunio a ginocchia, spalle, caviglie e lesioni muscolari.</p>
+        <p>Possibilità di integrazione del percorso con fisioterapista all'interno del centro.</p>
+      </div>
+    </article>
+
+    <article class="card" role="button" tabindex="0" aria-expanded="false">
+      <img src="performanceboost.JPG" alt="Performance boost — allenamento ad alta intensità">
+      <div class="card__overlay" aria-hidden="true"></div>
+      <span class="card__label">Performance<br>Boost</span>
+      <div class="card__desc">
+        <p>Sessioni di allenamento sport-specifico ad alta intensità finalizzate all'incremento della performance.</p>
+        <p>Lavori esplosivi, di potenza e pliometrici.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     SECTION 3 — TEAM
+══════════════════════════════════════════════ -->
+<section class="team" id="il-team" aria-labelledby="team-title">
+  <h2 class="section-title" id="team-title">UN TEAM DI PROFESSIONISTI</h2>
+
+  <div class="team-grid">
+
+    <div class="team-card">
+      <img class="team-card__photo"
+           src="mazza.jpeg"
+           alt="Francesco Mazzavillani — laureato magistrale in Scienze Motorie">
+      <p>Francesco coltiva da sempre una profonda passione per lo sport. L'esperienza calcistiche a livello semiprofessionistico hanno arricchito le sue conoscenze di performance atletica.</p>
+      <p>Il benessere fisico e la crescita continua del cliente guidano ogni scelta nella costruzione degli allenamenti.</p>
+    </div>
+
+    <div class="team-card">
+      <img class="team-card__photo"
+           src="foto bafo/luca.jpeg"
+           alt="Luca Ricci — laureato magistrale in Scienze Motorie">
+      <p>Luca laureato in Scienze Motorie, coltiva da sempre una forte passione per lo sport e il benessere fisico. L'esperienza lavorativa pluriennale nel mondo delle palestre ha consolidato le sue competenze nell'allenamento e nella preparazione fisica.</p>
+      <p>La passione per la riabilitazione e l'attività fisica adattata guida ogni percorso, con l'obiettivo di migliorare salute, performance e qualità del movimento.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     SECTION 4 — IL NOSTRO SPAZIO
+══════════════════════════════════════════════ -->
+<section class="spazio" id="il-nostro-spazio" aria-labelledby="spazio-title">
+  <h2 class="section-title" id="spazio-title">IL NOSTRO SPAZIO</h2>
+
+  <div class="slider" id="slider" tabindex="0"
+       role="region" aria-label="Galleria fotografica della palestra" aria-live="polite">
+
+    <div class="slider__track" id="sliderTrack">
+      <div class="slider__slide">
+        <img src="ns1.JPG" alt="Il nostro spazio — zona allenamento 1">
+      </div>
+      <div class="slider__slide">
+        <img src="ns2.JPG" alt="Il nostro spazio — zona allenamento 2">
+      </div>
+      <div class="slider__slide">
+        <img src="ns3.JPG" alt="Il nostro spazio — zona allenamento 3">
+      </div>
+      <div class="slider__slide">
+        <img src="ns4_1.jpeg" alt="Il nostro spazio — zona allenamento 4">
+      </div>
+      <div class="slider__slide">
+        <img src="ns5.JPG" alt="Il nostro spazio — zona allenamento 5">
+      </div>
+    </div>
+
+    <button class="slider__btn slider__btn--prev" id="sliderPrev" aria-label="Immagine precedente">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="slider__btn slider__btn--next" id="sliderNext" aria-label="Immagine successiva">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <div class="slider__dots" id="sliderDots" role="tablist" aria-label="Selezione immagine"></div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     ORARI DI APERTURA
+══════════════════════════════════════════════ -->
+<section class="orari-section" aria-label="Orari di apertura">
+  <div class="orari-wrap" aria-label="Orari di apertura">
+    <span class="orari-label">Orari di apertura</span>
+    <div class="orari" id="orariPill">
+      <div class="orari__block">
+        <span class="orari__days">Lun — Ven</span>
+        <span class="orari__time">8:00 – 20:00</span>
+      </div>
+      <div class="orari__block">
+        <span class="orari__days">Sabato</span>
+        <span class="orari__time">9:00 – 12:00</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     FOOTER / CONTATTI
+══════════════════════════════════════════════ -->
+<footer class="footer" id="contatti" aria-label="Contatti e informazioni FIT HUB">
+
+  <div class="footer__grid">
+
+    <!-- COL 1 — Logo -->
+    <div class="footer__logo">
+      <img src="FH + cuore B.png" alt="FIT HUB logo">
+    </div>
+
+    <!-- COL 2 — Contacts -->
+    <div class="footer__contacts">
+
+      <!-- Address — colored Google Maps icon -->
+      <div class="footer__item">
+        <svg viewBox="0 0 24 24" aria-hidden="true" style="overflow:visible">
+          <!-- pin body -->
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                fill="#EA4335"/>
+          <!-- inner circle -->
+          <circle cx="12" cy="9" r="2.8" fill="#fff"/>
+        </svg>
+        <a href="https://maps.app.goo.gl/5p87xwp9ggwduSDu9"
+           target="_blank" rel="noopener noreferrer"
+           aria-label="Via Alfieri 17a, Gambettola 47035 — apri in Google Maps">
+          Via Alfieri 17a, Gambettola 47035
+        </a>
+      </div>
+
+      <!-- Email -->
+      <div class="footer__item">
+        <img src="wa.png" alt="WhatsApp" class="icon-wa" aria-hidden="true">
+        <a href="mailto:fithubgambettola@gmail.com?subject=Ciao%20FIT%20HUB!"
+           aria-label="Invia un'email a FIT HUB">
+          fithubgambettola@gmail.com
+        </a>
+      </div>
+
+      <!-- Phone Francesco -->
+      <div class="footer__item">
+        <img src="wa.png" alt="WhatsApp" class="icon-wa" aria-hidden="true">
+        <a href="https://wa.me/393456108736" target="_blank" rel="noopener noreferrer"
+           aria-label="Contatta Francesco Mazzavillani su WhatsApp">
+          Francesco Mazzavillani +39 3456108736
+        </a>
+      </div>
+
+      <!-- Phone Luca -->
+      <div class="footer__item">
+        <img src="wa.png" alt="WhatsApp" class="icon-wa" aria-hidden="true">
+        <a href="https://wa.me/393205322341" target="_blank" rel="noopener noreferrer"
+           aria-label="Contatta Luca Ricci su WhatsApp">
+          Luca Ricci +39 3205322341
+        </a>
+      </div>
+
+    </div>
+
+    <!-- COL 3 — Social (bottom-aligned) -->
+    <div class="footer__social-col">
+      <div class="footer__social">
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/fithub_gambettola/"
+           target="_blank" rel="noopener noreferrer"
+           aria-label="Profilo Instagram di FIT HUB">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+          </svg>
+        </a>
+
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/profile.php?id=61565772148520"
+           target="_blank" rel="noopener noreferrer"
+           aria-label="Pagina Facebook di FIT HUB">
+          <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
+            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+          </svg>
+        </a>
+
+        <!-- WhatsApp (B&W) -->
+        <a href="https://wa.me/393456108736"
+           target="_blank" rel="noopener noreferrer"
+           aria-label="Contattaci su WhatsApp">
+          <img src="wa.png" alt="WhatsApp" class="icon-wa" aria-hidden="true">
+        </a>
+
+      </div>
+    </div>
+
+  </div><!-- /footer__grid -->
+
+  <!-- Back to top -->
+  <button class="footer__back-top"
+          onclick="window.scrollTo({top:0,behavior:'smooth'})"
+          aria-label="Torna in cima alla pagina">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  </button>
+
+</footer>
+
+
+<!-- ══════════════════════════════════════════════
+     WHATSAPP FAB
+══════════════════════════════════════════════ -->
+<a class="whatsapp-fab"
+   href="https://wa.me/393456108736"
+   target="_blank" rel="noopener noreferrer"
+   aria-label="Scrivici su WhatsApp">
+  <img src="wa.png" alt="WhatsApp" class="icon-wa" aria-hidden="true">
+</a>
+
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── HAMBURGER ── */
+  const hamburger = document.getElementById('hamburger');
+  const navLinks  = document.getElementById('navLinks');
+
+  hamburger.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', String(open));
+  });
+  navLinks.querySelectorAll('a').forEach(l => l.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+  }));
+
+  /* ── CARDS — click to reveal description ── */
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('.card__desc')) return; // clicks inside desc don't toggle
+      const isActive = card.classList.contains('active');
+      cards.forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('aria-expanded', 'false');
+      });
+      if (!isActive) {
+        card.classList.add('active');
+        card.setAttribute('aria-expanded', 'true');
+      }
+    });
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.click();
+      }
+    });
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.card')) {
+      cards.forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+
+  /* ── ORARI — IntersectionObserver entrance ── */
+  const orariPill = document.getElementById('orariPill');
+  if (orariPill && 'IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.4 }).observe(orariPill);
+  } else if (orariPill) {
+    orariPill.classList.add('visible');
+  }
+
+  /* ── SLIDER ── */
+  const track    = document.getElementById('sliderTrack');
+  const dotsWrap = document.getElementById('sliderDots');
+  const sliderEl = document.getElementById('slider');
+  const slides   = Array.from(track.querySelectorAll('.slider__slide'));
+  const total    = slides.length;
+  let   current  = 0;
+  let   timer    = null;
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'slider__dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('role', 'tab');
+    dot.setAttribute('aria-label', 'Immagine ' + (i + 1));
+    dot.setAttribute('aria-selected', String(i === 0));
+    dot.addEventListener('click', () => { goTo(i); reset(); });
+    dotsWrap.appendChild(dot);
+  });
+
+  function dots() { return dotsWrap.querySelectorAll('.slider__dot'); }
+
+  function goTo(i) {
+    current = ((i % total) + total) % total;
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots().forEach((d, j) => {
+      const a = j === current;
+      d.classList.toggle('active', a);
+      d.setAttribute('aria-selected', String(a));
+    });
+  }
+
+  const next = () => goTo(current + 1);
+  const prev = () => goTo(current - 1);
+
+  document.getElementById('sliderNext').addEventListener('click', () => { next(); reset(); });
+  document.getElementById('sliderPrev').addEventListener('click', () => { prev(); reset(); });
+
+  function start() { timer = setInterval(next, 4000); }
+  function reset() { clearInterval(timer); start(); }
+
+  sliderEl.addEventListener('mouseenter', () => clearInterval(timer));
+  sliderEl.addEventListener('mouseleave', start);
+  sliderEl.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  { prev(); reset(); }
+    if (e.key === 'ArrowRight') { next(); reset(); }
+  });
+
+  start();
+
+})();
+</script>
+
+</body>
+</html>
